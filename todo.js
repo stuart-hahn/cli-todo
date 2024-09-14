@@ -43,7 +43,7 @@ switch (command) {
       break;
     }
     // Add the new todo to the todos array
-    todos.push({ text: todoText });
+    todos.push({ text: todoText, completed: false });
     // Save the updated todos array to the file
     saveTodos();
     console.log(`Added todo: "${todoText}"`);
@@ -57,7 +57,9 @@ switch (command) {
       console.log("Todo List:");
       // Loop through the todos array and display each todo with its index
       todos.forEach((todo, index) => {
-        console.log(`${index + 1}. ${todo.text}`);
+        // Display [x] if completed, [ ] if not
+        const status = todo.completed ? "[x]" : "[ ]";
+        console.log(`${index + 1}. ${status} ${todo.text}`);
       });
     }
     break;
@@ -100,6 +102,29 @@ switch (command) {
     // Save the updated todos array to the file
     saveTodos();
     console.log(`Deleted todo ${deleteIndex + 1}: "${deleted[0].text}"`);
+    break;
+
+  case "complete":
+    // Parse the index of the todo to complete
+    const completeIndex = parseInt(args[0], 10) - 1;
+    // Validate the index
+    if (
+      isNaN(completeIndex) ||
+      completeIndex < 0 ||
+      completeIndex >= todos.length
+    ) {
+      console.log("Invalid index for completion.");
+      break;
+    }
+    // Toggle the completion status
+    todos[completeIndex].completed = !todos[completeIndex].completed;
+    // Save the updated todos array to the file
+    saveTodos();
+    console.log(
+      `Marked todo ${completeIndex + 1} as ${
+        todos[completeIndex].completed ? "completed" : "pending"
+      }.`
+    );
     break;
 
   default:
